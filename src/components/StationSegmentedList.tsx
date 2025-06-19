@@ -13,7 +13,9 @@ import { station_names } from "../Query";
 
 export default function StationSegmentedList() {
   const { updateStations } = use(MyContext);
-  const [stationSelected, setStationSelected] = useState<string>("Espana");
+  const [stationSelected, setStationSelected] = useState<string>(
+    station_names[0]
+  );
 
   return (
     <>

@@ -185,6 +185,7 @@ export const buildingLayer = new BuildingSceneLayer({
       url: "https://gis.railway-sector.com/portal",
     },
   },
+  title: "Station Structure",
 });
 
 // Discipline: Architectural
