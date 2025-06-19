@@ -104,14 +104,14 @@ export async function generateChartData(station: any) {
     statisticType: "sum",
   });
 
-  var total_delay = new StatisticDefinition({
-    onStatisticField: "CASE WHEN Status = 3 THEN 1 ELSE 0 END",
-    outStatisticFieldName: "total_delay",
+  var total_ongoing = new StatisticDefinition({
+    onStatisticField: "CASE WHEN Status = 2 THEN 1 ELSE 0 END",
+    outStatisticFieldName: "total_ongoing",
     statisticType: "sum",
   });
 
   var query = new Query();
-  query.outStatistics = [total_incomp, total_comp, total_delay];
+  query.outStatistics = [total_incomp, total_comp, total_ongoing];
 
   const find = stationValues.find((emp: any) => emp.station === station);
   const value = find?.value;
@@ -135,8 +135,8 @@ export async function generateChartData(station: any) {
       var stats = response.features[0].attributes;
       const total_incomp = stats.total_incomp;
       const total_comp = stats.total_comp;
-      const total_delay = stats.total_delay;
-      return [total_incomp, total_comp, total_delay];
+      const total_ongoing = stats.total_ongoing;
+      return [total_incomp, total_comp, total_ongoing];
     });
 
   const stFoundationCompile = stFoundationLayer
@@ -145,9 +145,9 @@ export async function generateChartData(station: any) {
       var stats = response.features[0].attributes;
       const total_incomp = stats.total_incomp;
       const total_comp = stats.total_comp;
-      const total_delay = stats.total_delay;
+      const total_ongoing = stats.total_ongoing;
 
-      return [total_incomp, total_comp, total_delay];
+      return [total_incomp, total_comp, total_ongoing];
     });
 
   const stFramingCompile = stFramingLayer
@@ -156,9 +156,9 @@ export async function generateChartData(station: any) {
       var stats = response.features[0].attributes;
       const total_incomp = stats.total_incomp;
       const total_comp = stats.total_comp;
-      const total_delay = stats.total_delay;
+      const total_ongoing = stats.total_ongoing;
 
-      return [total_incomp, total_comp, total_delay];
+      return [total_incomp, total_comp, total_ongoing];
     });
 
   const floorsCompile = floorsLayer
@@ -167,18 +167,18 @@ export async function generateChartData(station: any) {
       var stats = response.features[0].attributes;
       const total_incomp = stats.total_incomp;
       const total_comp = stats.total_comp;
-      const total_delay = stats.total_delay;
+      const total_ongoing = stats.total_ongoing;
 
-      return [total_incomp, total_comp, total_delay];
+      return [total_incomp, total_comp, total_ongoing];
     });
 
   const wallsCompile = wallsLayer.queryFeatures(query).then((response: any) => {
     var stats = response.features[0].attributes;
     const total_incomp = stats.total_incomp;
     const total_comp = stats.total_comp;
-    const total_delay = stats.total_delay;
+    const total_ongoing = stats.total_ongoing;
 
-    return [total_incomp, total_comp, total_delay];
+    return [total_incomp, total_comp, total_ongoing];
   });
 
   const genericCompile = genericLayer
@@ -187,18 +187,18 @@ export async function generateChartData(station: any) {
       var stats = response.features[0].attributes;
       const total_incomp = stats.total_incomp;
       const total_comp = stats.total_comp;
-      const total_delay = stats.total_delay;
+      const total_ongoing = stats.total_ongoing;
 
-      return [total_incomp, total_comp, total_delay];
+      return [total_incomp, total_comp, total_ongoing];
     });
 
   const massCompile = massLayer.queryFeatures(query).then((response: any) => {
     var stats = response.features[0].attributes;
     const total_incomp = stats.total_incomp;
     const total_comp = stats.total_comp;
-    const total_delay = stats.total_delay;
+    const total_ongoing = stats.total_ongoing;
 
-    return [total_incomp, total_comp, total_delay];
+    return [total_incomp, total_comp, total_ongoing];
   });
 
   const specialityEquipmentCompile = specialtyEquipmentLayer
@@ -207,9 +207,9 @@ export async function generateChartData(station: any) {
       var stats = response.features[0].attributes;
       const total_incomp = stats.total_incomp;
       const total_comp = stats.total_comp;
-      const total_delay = stats.total_delay;
+      const total_ongoing = stats.total_ongoing;
 
-      return [total_incomp, total_comp, total_delay];
+      return [total_incomp, total_comp, total_ongoing];
     });
 
   const stcolumn = await stColumnCompile;
@@ -223,44 +223,44 @@ export async function generateChartData(station: any) {
 
   const others_comp = mass[1] + generic[1] + specialityEquipment[1];
   const others_incomp = mass[0] + generic[0] + specialityEquipment[0];
-  const others_delay = mass[2] + generic[2] + specialityEquipment[2];
+  const others_ongoing = mass[2] + generic[2] + specialityEquipment[2];
 
   const data = [
     {
       category: buildingLayerCategory[0],
       comp: stfoundation[1],
       incomp: stfoundation[0],
-      delay: stfoundation[2],
+      ongoing: stfoundation[2],
     },
     {
       category: buildingLayerCategory[1],
       comp: stframing[1],
       incomp: stframing[0],
-      delay: stframing[2],
+      ongoing: stframing[2],
     },
     {
       category: buildingLayerCategory[2],
       comp: stcolumn[1],
       incomp: stcolumn[0],
-      delay: stcolumn[2],
+      ongoing: stcolumn[2],
     },
     {
       category: buildingLayerCategory[4],
       comp: floors[1],
       incomp: floors[0],
-      delay: floors[2],
+      ongoing: floors[2],
     },
     {
       category: buildingLayerCategory[5],
       comp: walls[1],
       incomp: walls[0],
-      delay: walls[2],
+      ongoing: walls[2],
     },
     {
       category: buildingLayerCategory[6],
       comp: others_comp,
       incomp: others_incomp,
-      delay: others_delay,
+      ongoing: others_ongoing,
     },
   ];
 

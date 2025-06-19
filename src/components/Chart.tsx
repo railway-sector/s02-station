@@ -8,7 +8,6 @@ import {
   genericLayer,
   massLayer,
   specialtyEquipmentLayer,
-  buildingLayer,
 } from "../layers";
 
 import * as am5 from "@amcharts/amcharts5";
@@ -82,7 +81,7 @@ const Chart = () => {
 
   const chartSeriesFillColorComp = "#0070ff";
   const chartSeriesFillColorIncomp = "#000000";
-  const chartSeriesFillColorDelay = "#FF0000"; // orfiginal: #FF0000
+  const chartSeriesFillColorOngoing = "#d3d3d3"; // orfiginal: #FF0000
   const chartBorderLineColor = "#00c5ff";
   const chartBorderLineWidth = 0.4;
 
@@ -208,24 +207,17 @@ const Chart = () => {
           valueXShow: "valueXTotalPercent",
           categoryYField: "category",
           fill:
-            fieldName === "delay"
-              ? fieldName === "incomp"
-                ? am5.color(chartSeriesFillColorIncomp)
-                : am5.color(chartSeriesFillColorDelay)
+            fieldName === "incomp"
+              ? am5.color(chartSeriesFillColorIncomp)
+              : fieldName === "ongoing"
+              ? am5.color(chartSeriesFillColorOngoing)
               : am5.color(chartSeriesFillColorComp),
           stroke: am5.color(chartBorderLineColor),
         })
       );
 
       series.columns.template.setAll({
-        fillOpacity:
-          fieldName === "comp" // first condition
-            ? fieldName === "incomp" // second condition
-              ? 0 // if first condition is false and second condition is true,
-              : 1 // if first condition is true
-            : fieldName === "delay" // third condition
-            ? 0.5 // if first and second conditions are false but third condition is true
-            : 0, // else
+        fillOpacity: fieldName === "comp" ? 1 : 0.5,
         tooltipText: "{name}: {valueX}", // "{categoryY}: {valueX}",
         tooltipY: am5.percent(90),
         strokeWidth: chartBorderLineWidth,
@@ -238,9 +230,9 @@ const Chart = () => {
         return am5.Bullet.new(root, {
           sprite: am5.Label.new(root, {
             text:
-              fieldName === "incomp" || fieldName === "delay"
-                ? ""
-                : "{valueXTotalPercent.formatNumber('#.')}%", //"{valueX}",
+              fieldName === "comp"
+                ? "{valueXTotalPercent.formatNumber('#.')}%"
+                : "",
             fill: root.interfaceColors.get("alternativeText"),
             opacity: fieldName === "incomp" ? 0 : 1,
             fontSize: seriesBulletLabelFontSize,
@@ -334,7 +326,7 @@ const Chart = () => {
     }
     makeSeries("Complete", "comp");
     makeSeries("Incomplete", "incomp");
-    makeSeries("Delayed", "delay");
+    makeSeries("Ongoing", "ongoing");
     chart.appear(1000, 100);
 
     return () => {

@@ -232,33 +232,64 @@ export const popuTemplate = {
 
 const colorStatus = [
   [225, 225, 225, 0.1], // To be Constructed (white)
-  [130, 130, 130, 0.5], // Under Construction
+  [211, 211, 211, 0.5], // Under Construction
   [255, 0, 0, 0.8], // Delayed
   [0, 112, 255, 0.8], // Completed
 ];
 
 const renderer = new UniqueValueRenderer({
   field: "Status",
-});
-
-for (var i = 0; i < colorStatus.length; i++) {
-  renderer.addUniqueValueInfo({
-    value: i + 1,
-    symbol: new MeshSymbol3D({
-      symbolLayers: [
-        new FillSymbol3DLayer({
-          material: {
-            color: colorStatus[i],
-            colorMixMode: "replace",
-          },
-          edges: new SolidEdges3D({
-            color: [225, 225, 225, 0.8], // default = 0.3
+  uniqueValueInfos: [
+    {
+      value: 1,
+      symbol: new MeshSymbol3D({
+        symbolLayers: [
+          new FillSymbol3DLayer({
+            material: {
+              color: colorStatus[0],
+              colorMixMode: "replace",
+            },
+            edges: new SolidEdges3D({
+              color: [225, 225, 225, 0.3],
+            }),
           }),
-        }),
-      ],
-    }),
-  });
-}
+        ],
+      }),
+    },
+    {
+      value: 2,
+      symbol: new MeshSymbol3D({
+        symbolLayers: [
+          new FillSymbol3DLayer({
+            material: {
+              color: colorStatus[1],
+              colorMixMode: "replace",
+            },
+            edges: new SolidEdges3D({
+              color: [225, 225, 225, 0.3],
+            }),
+          }),
+        ],
+      }),
+    },
+    {
+      value: 4,
+      symbol: new MeshSymbol3D({
+        symbolLayers: [
+          new FillSymbol3DLayer({
+            material: {
+              color: colorStatus[3],
+              colorMixMode: "replace",
+            },
+            edges: new SolidEdges3D({
+              color: [225, 225, 225, 0.3],
+            }),
+          }),
+        ],
+      }),
+    },
+  ],
+});
 
 buildingLayer.when(() => {
   buildingLayer.allSublayers.forEach((layer: any) => {
