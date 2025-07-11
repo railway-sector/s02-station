@@ -1,3 +1,10 @@
+.esri-attribution {
+  display: none;
+  /* or */
+  /* position: absolute;
+  left: -9999px; */
+}
+
 .mapDiv {
   padding: 0;
   margin: 0;
@@ -55,11 +62,11 @@ calcite-list {
   --calcite-color-border-3: #555555;
 }
 
-calcite-segmented-control {
+/* calcite-segmented-control {
   margin-left: 35%;
   margin-top: auto;
   margin-bottom: auto;
-}
+} */
 
 .calcitePanelBasemaps {
   display: grid;
