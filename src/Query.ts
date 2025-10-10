@@ -135,7 +135,6 @@ export async function generateChartData(station: any) {
       var stats = response.features[0].attributes;
       const total_incomp = stats.total_incomp;
       const total_comp = stats.total_comp;
-      const total_ongoing = stats.total_ongoing;
       return [total_incomp, total_comp];
     });
 
@@ -145,7 +144,6 @@ export async function generateChartData(station: any) {
       var stats = response.features[0].attributes;
       const total_incomp = stats.total_incomp;
       const total_comp = stats.total_comp;
-      const total_ongoing = stats.total_ongoing;
 
       return [total_incomp, total_comp];
     });
@@ -156,7 +154,6 @@ export async function generateChartData(station: any) {
       var stats = response.features[0].attributes;
       const total_incomp = stats.total_incomp;
       const total_comp = stats.total_comp;
-      const total_ongoing = stats.total_ongoing;
 
       return [total_incomp, total_comp];
     });
@@ -167,7 +164,6 @@ export async function generateChartData(station: any) {
       var stats = response.features[0].attributes;
       const total_incomp = stats.total_incomp;
       const total_comp = stats.total_comp;
-      const total_ongoing = stats.total_ongoing;
 
       return [total_incomp, total_comp];
     });
@@ -176,7 +172,6 @@ export async function generateChartData(station: any) {
     var stats = response.features[0].attributes;
     const total_incomp = stats.total_incomp;
     const total_comp = stats.total_comp;
-    const total_ongoing = stats.total_ongoing;
 
     return [total_incomp, total_comp];
   });
@@ -187,7 +182,6 @@ export async function generateChartData(station: any) {
       var stats = response.features[0].attributes;
       const total_incomp = stats.total_incomp;
       const total_comp = stats.total_comp;
-      const total_ongoing = stats.total_ongoing;
 
       return [total_incomp, total_comp];
     });
@@ -196,7 +190,6 @@ export async function generateChartData(station: any) {
     var stats = response.features[0].attributes;
     const total_incomp = stats.total_incomp;
     const total_comp = stats.total_comp;
-    const total_ongoing = stats.total_ongoing;
 
     return [total_incomp, total_comp];
   });
@@ -207,7 +200,6 @@ export async function generateChartData(station: any) {
       var stats = response.features[0].attributes;
       const total_incomp = stats.total_incomp;
       const total_comp = stats.total_comp;
-      const total_ongoing = stats.total_ongoing;
 
       return [total_incomp, total_comp];
     });
@@ -223,7 +215,6 @@ export async function generateChartData(station: any) {
 
   const others_comp = mass[1] + generic[1] + specialityEquipment[1];
   const others_incomp = mass[0] + generic[0] + specialityEquipment[0];
-  const others_ongoing = mass[2] + generic[2] + specialityEquipment[2];
 
   const data = [
     {

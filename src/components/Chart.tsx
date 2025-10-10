@@ -210,8 +210,6 @@ const Chart = () => {
           fill:
             fieldName === "incomp"
               ? am5.color(chartSeriesFillColorIncomp)
-              : fieldName === "ongoing"
-              ? am5.color(chartSeriesFillColorOngoing)
               : am5.color(chartSeriesFillColorComp),
           stroke: am5.color(chartBorderLineColor),
         })
