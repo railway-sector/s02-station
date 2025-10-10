@@ -110,14 +110,8 @@ export async function generateChartData(station: any) {
     statisticType: "sum",
   });
 
-  var total_ongoing = new StatisticDefinition({
-    onStatisticField: "CASE WHEN Status = 2 THEN 1 ELSE 0 END",
-    outStatisticFieldName: "total_ongoing",
-    statisticType: "sum",
-  });
-
   var query = new Query();
-  query.outStatistics = [total_incomp, total_comp, total_ongoing];
+  query.outStatistics = [total_incomp, total_comp];
 
   const find = stationValues.find((emp: any) => emp.station === station);
   const value = find?.value;
@@ -142,7 +136,7 @@ export async function generateChartData(station: any) {
       const total_incomp = stats.total_incomp;
       const total_comp = stats.total_comp;
       const total_ongoing = stats.total_ongoing;
-      return [total_incomp, total_comp, total_ongoing];
+      return [total_incomp, total_comp];
     });
 
   const stFoundationCompile = stFoundationLayer
@@ -153,7 +147,7 @@ export async function generateChartData(station: any) {
       const total_comp = stats.total_comp;
       const total_ongoing = stats.total_ongoing;
 
-      return [total_incomp, total_comp, total_ongoing];
+      return [total_incomp, total_comp];
     });
 
   const stFramingCompile = stFramingLayer
@@ -164,7 +158,7 @@ export async function generateChartData(station: any) {
       const total_comp = stats.total_comp;
       const total_ongoing = stats.total_ongoing;
 
-      return [total_incomp, total_comp, total_ongoing];
+      return [total_incomp, total_comp];
     });
 
   const floorsCompile = floorsLayer
@@ -175,7 +169,7 @@ export async function generateChartData(station: any) {
       const total_comp = stats.total_comp;
       const total_ongoing = stats.total_ongoing;
 
-      return [total_incomp, total_comp, total_ongoing];
+      return [total_incomp, total_comp];
     });
 
   const wallsCompile = wallsLayer.queryFeatures(query).then((response: any) => {
@@ -184,7 +178,7 @@ export async function generateChartData(station: any) {
     const total_comp = stats.total_comp;
     const total_ongoing = stats.total_ongoing;
 
-    return [total_incomp, total_comp, total_ongoing];
+    return [total_incomp, total_comp];
   });
 
   const genericCompile = genericLayer
@@ -195,7 +189,7 @@ export async function generateChartData(station: any) {
       const total_comp = stats.total_comp;
       const total_ongoing = stats.total_ongoing;
 
-      return [total_incomp, total_comp, total_ongoing];
+      return [total_incomp, total_comp];
     });
 
   const massCompile = massLayer.queryFeatures(query).then((response: any) => {
@@ -204,7 +198,7 @@ export async function generateChartData(station: any) {
     const total_comp = stats.total_comp;
     const total_ongoing = stats.total_ongoing;
 
-    return [total_incomp, total_comp, total_ongoing];
+    return [total_incomp, total_comp];
   });
 
   const specialityEquipmentCompile = specialtyEquipmentLayer
@@ -215,7 +209,7 @@ export async function generateChartData(station: any) {
       const total_comp = stats.total_comp;
       const total_ongoing = stats.total_ongoing;
 
-      return [total_incomp, total_comp, total_ongoing];
+      return [total_incomp, total_comp];
     });
 
   const stcolumn = await stColumnCompile;
@@ -236,37 +230,31 @@ export async function generateChartData(station: any) {
       category: buildingLayerCategory[0],
       comp: stfoundation[1],
       incomp: stfoundation[0],
-      ongoing: stfoundation[2],
     },
     {
       category: buildingLayerCategory[1],
       comp: stframing[1],
       incomp: stframing[0],
-      ongoing: stframing[2],
     },
     {
       category: buildingLayerCategory[2],
       comp: stcolumn[1],
       incomp: stcolumn[0],
-      ongoing: stcolumn[2],
     },
     {
       category: buildingLayerCategory[4],
       comp: floors[1],
       incomp: floors[0],
-      ongoing: floors[2],
     },
     {
       category: buildingLayerCategory[5],
       comp: walls[1],
       incomp: walls[0],
-      ongoing: walls[2],
     },
     {
       category: buildingLayerCategory[6],
       comp: others_comp,
       incomp: others_incomp,
-      ongoing: others_ongoing,
     },
   ];
 
