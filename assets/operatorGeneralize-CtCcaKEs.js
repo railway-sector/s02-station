@@ -1,0 +1,1 @@
+import{Ht as o}from"./index-BMNujcx8.js";import{P as c}from"./OperatorGeneralize-CYv8GuEX.js";const u=new c;function i(n,t,r){return u.execute(n,t,r,null)}function m(n,t,r){const e=u.executeMany(new o(n),t,r,null);return Array.from(e)}function p(){return u.supportsCurves()}export{m as o,i as t,p as u};

@@ -1,1 +1,0 @@
-import{gB as a}from"./index-Cv3uI7FN.js";import{I as n}from"./applyEditsUtils-tkArY3-Q.js";function u(t){return t.map(e=>{const r=e.editedFeatures,i=a.fromJSON(r?.spatialReference);return r?{layerId:e.id,editedFeatures:n(r,i)}:null}).filter(e=>e!==null)}export{u as t};
