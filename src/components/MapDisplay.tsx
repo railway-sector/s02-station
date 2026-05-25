@@ -40,7 +40,7 @@ function MapDisplay() {
       ground="world-elevation"
       viewingMode="local"
       zoom={18}
-      center="120.9844920, 14.6223536"
+      center="120.9953567, 14.6135970"
     >
       <arcgis-compass slot="top-right"></arcgis-compass>
       <arcgis-zoom slot="bottom-right"></arcgis-zoom>
