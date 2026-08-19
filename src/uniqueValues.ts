@@ -27,8 +27,8 @@ export const portalItems = (id: any) => {
 };
 
 export const stations_q = [
-  { value: 12, name: "Espana" },
-  { value: 13, name: "Santa Mesa" },
+  { value: 12, name: "España" },
+  { value: 13, name: "Sta. Mesa" },
   { value: 14, name: "Paco" },
 ];
 

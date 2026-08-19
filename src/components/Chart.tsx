@@ -1,16 +1,8 @@
 import { useEffect, useRef, useState, use } from "react";
-import { stColumnLayer, sublayersAll, buildingLayer } from "../layers";
-import SubLayerView from "@arcgis/core/views/layers/BuildingComponentSublayerView";
+import { sublayersAll, buildingLayer, stationLayer } from "../layers";
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
-import {
-  makeQuery,
-  resetAllLayers,
-  stackColumnChartData,
-  stackColumnChartRender,
-  thousands_separators,
-  zoomToLayer,
-} from "../query";
+import { resetAllLayers, thousands_separators, zoomToLayer } from "../query";
 import { ArcgisScene } from "@arcgis/map-components/dist/components/arcgis-scene";
 import {
   station_name_f,
@@ -20,51 +12,41 @@ import {
   types_q,
 } from "../uniqueValues";
 import { MyContext } from "../contexts/MyContext";
-import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
 import { queryDefinitionExpression } from "../queryExpression";
 import { useQuery } from "@tanstack/react-query";
 import { legendSetter, rootSetter } from "../chartSetter";
 import ChartStackColumns from "chart-stack-column";
 import ChartStackColumnRender from "chart-stack-column-render";
+import QueryExpressionLayers from "query-layers-expression";
 
-// Draw chart
-const Chart = () => {
-  const { stations } = use(MyContext);
-  const arcgisScene = document.querySelector("arcgis-scene") as ArcgisScene;
-
-  const [chartPanelwidth, setChartPanelwidth] = useState<any>();
-  const legendRef = useRef<unknown | any | undefined>({});
-  const chartRef = useRef<unknown | any | undefined>({});
-  const [sublayerViewFilter, setSublayerViewFilter] = useState<SubLayerView>();
-  const [resetButtonClicked, setResetButtonClicked] = useState<boolean>(false);
-  const highlightedSublayerView = useRef<any>(undefined);
-  const chartID = "station-bar";
-
-  //--- Common qValues and qFields for QueryExpressionLayers class
-  const qV = stations_q.find((item) => item.name === stations)?.value;
-  const queryc = makeQuery([qV], [station_name_f]);
-
-  const sublayersArray = sublayersAll.map((item: any) => item.layer);
-
-  const { data } = useQuery<any>({
-    queryKey: [stations, types_q],
+//------------------------------//
+//      useStationData          //
+//------------------------------//
+function useStationData(
+  stations: string,
+  query: any,
+  sublayersArray: any,
+  arcgisScene: any,
+) {
+  return useQuery<any>({
+    queryKey: [stations, types_q, stationLayer],
     queryFn: async () => {
       queryDefinitionExpression({
-        queryExpression: queryc.queryExpression(),
+        queryExpression: query.queryExpression(),
         featureLayer: sublayersArray,
       });
 
-      const chartData = await stackColumnChartData({
-        colchart: new ChartStackColumns(),
-        qChart: queryc,
+      const chartData = await new ChartStackColumns({
+        where: query,
         categoryTypes: types_q,
         categoryTypeField: undefined,
         layers: sublayersArray,
         statusField: status_f,
         statusState: [1, 2, 3, 4],
-      });
+      }).chartDataStackColumns();
 
-      zoomToLayer(stColumnLayer, arcgisScene);
+      stationLayer.definitionExpression = `Station = '${stations}'`;
+      zoomToLayer(stationLayer, arcgisScene);
 
       return {
         chartData: chartData[0] || [],
@@ -74,6 +56,30 @@ const Chart = () => {
     },
     staleTime: Infinity,
   });
+}
+
+// Draw chart
+const Chart = () => {
+  const { stations } = use(MyContext);
+  const arcgisScene = document.querySelector("arcgis-scene") as ArcgisScene;
+  const [resetButtonClicked, setResetButtonClicked] = useState<boolean>(false);
+
+  const [chartPanelwidth, setChartPanelwidth] = useState<any>();
+  const legendRef = useRef<unknown | any | undefined>({});
+  const chartRef = useRef<unknown | any | undefined>({});
+  const chartID = "station-bar";
+
+  //--- Common qValues and qFields for QueryExpressionLayers class
+  const qV = stations_q.find((item) => item.name === stations)?.value;
+
+  const q1 = new QueryExpressionLayers({
+    qFields: [station_name_f],
+    qValues: [qV],
+  });
+
+  const sublayersArray = sublayersAll.map((item: any) => item.layer);
+
+  const { data } = useStationData(stations, q1, sublayersArray, arcgisScene);
   const chartData = data?.chartData || [];
   const totaln = data?.totaln || 0;
   const perc_comp = data?.perc || 0;
@@ -102,6 +108,7 @@ const Chart = () => {
 
   useEffect(() => {
     const root = rootSetter({ chartID: chartID });
+    root.setThemes([]);
 
     const chart = root.container.children.push(
       am5xy.XYChart.new(root, {
@@ -136,15 +143,15 @@ const Chart = () => {
 
     //-- Chart render
     const chartIconPositionX = 0;
-    stackColumnChartRender({
-      render: new ChartStackColumnRender(),
+
+    new ChartStackColumnRender({
       revit: true,
       layers: sublayersAll,
       root,
       chart,
       data: chartData,
       buildingLayer: buildingLayer,
-      qChart: queryc,
+      where: q1,
       chartCategoryTypes: types_q,
       chartCategoryTypeField: undefined,
       statusTypename: ["Completed", "To be Constructed"],
@@ -155,15 +162,13 @@ const Chart = () => {
       strokeColor: chartBorderLineColor,
       strokeWidth: chartBorderLineWidth,
       view: arcgisScene?.view,
-      setLayerViewFilter: setSublayerViewFilter,
       new_chartIconSize,
       new_axisFontSize,
       chartIconPositionX,
       chartPaddingRightIconLabel,
       legend,
       updateChartPanelwidth: setChartPanelwidth,
-    });
-    chart.appear(1000, 100);
+    }).chartRendererColumn();
 
     return () => {
       root.dispose();
@@ -171,14 +176,7 @@ const Chart = () => {
   });
 
   useEffect(() => {
-    highlightedSublayerView.current && highlightedSublayerView.current.remove();
-
-    if (sublayerViewFilter) {
-      sublayerViewFilter.filter = new FeatureFilter({
-        where: undefined,
-      });
-      resetAllLayers({ layers: sublayersAll });
-    }
+    resetAllLayers({ layers: sublayersAll });
   }, [resetButtonClicked]);
 
   const primaryLabelColor = "#9ca3af";
@@ -248,17 +246,11 @@ const Chart = () => {
       ></div>
       <div
         id="filterButton"
-        style={{
-          width: "50%",
-          marginLeft: "30%",
-          paddingTop: "5%",
-        }}
+        style={{ width: "50%", marginLeft: "30%", paddingTop: "5%" }}
       >
         <calcite-button
           iconEnd="reset"
-          onClick={() =>
-            setResetButtonClicked(resetButtonClicked === false ? true : false)
-          }
+          onClick={() => setResetButtonClicked((prev: any) => !prev)}
         >
           Reset Chart Filter
         </calcite-button>
